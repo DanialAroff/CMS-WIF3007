@@ -64,4 +64,6 @@ public abstract class Acquaintances implements Serializable{
             this.setEmail(reader.next());
         }
     }
+    
+    public abstract String details();
 }

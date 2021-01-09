@@ -25,4 +25,14 @@ public class ProfessionalFriends extends Acquaintances implements Serializable {
             setCommonInterests(reader.nextLine());
         }
     }
+
+    @Override
+    public String details() {
+        String details = "";
+        details = details.concat("Name: " + this.getName() + "<br>");
+        details = details.concat("Mobile No: " + this.getMobileNo() + "<br>");
+        details = details.concat("Email: " + this.getEmail() + "<br>");
+        details = details.concat("Common Interests: " + this.getCommonInterests() + "<br>");
+        return details;
+    }
 }

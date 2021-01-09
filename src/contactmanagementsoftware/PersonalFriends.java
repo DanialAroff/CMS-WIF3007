@@ -49,4 +49,16 @@ public class PersonalFriends extends Acquaintances implements Serializable{
             setEvents(reader.nextLine());
         }
     }
+
+    @Override
+    public String details() {
+        String details = "";
+        details = details.concat("Name: " + this.getName() + "<br>");
+        details = details.concat("Mobile No: " + this.getMobileNo() + "<br>");
+        details = details.concat("Email: " + this.getEmail() + "<br>");
+        details = details.concat("Specific events: " + this.getEvents() + "<br>");
+        details = details.concat("First Acquaintance context: " + this.getAContext() + "<br>");
+        details = details.concat("First Acquaintance date: " + this.getADate() + "<br>");
+        return details;
+    }
 }

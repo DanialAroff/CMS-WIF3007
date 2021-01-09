@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class AcquaintanceIterator extends AcquaintanceComponent implements Iterator {
+public class AcquaintanceIterator implements Iterator {
     Iterator ec;
     String acquaintanceName;
     int acquaintanceType;
@@ -44,8 +44,6 @@ public class AcquaintanceIterator extends AcquaintanceComponent implements Itera
         }
     }
     
-    
-    @Override
     public String print() {
         String s = "";
         int i = 1;

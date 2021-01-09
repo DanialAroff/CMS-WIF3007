@@ -29,4 +29,15 @@ public class Relatives extends Acquaintances implements Serializable{
     public void setLDate(String LDate) {
         this.LDate = LDate;
     }
+
+    @Override
+    public String details() {
+        String details = "";
+        details = details.concat("Name: " + this.getName() + "<br>");
+        details = details.concat("Mobile No: " + this.getMobileNo() + "<br>");
+        details = details.concat("Email: " + this.getEmail() + "<br>");
+        details = details.concat("Relatives Birthday: " + this.getBDate() + "<br>");
+        details = details.concat("Last met date: " + this.getLDate() + "<br>");
+        return details;
+    }
 }
