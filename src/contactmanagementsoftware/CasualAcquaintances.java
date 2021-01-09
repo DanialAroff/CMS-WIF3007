@@ -56,8 +56,9 @@ public class CasualAcquaintances extends Acquaintances implements Serializable{
     }
 
     @Override
-    public String details() {
+    public String getDetails() {
         String details = "";
+        details = details.concat("Category: Casual Acquaintance" + "<br>");
         details = details.concat("Name: " + this.getName() + "<br>");
         details = details.concat("Mobile No: " + this.getMobileNo() + "<br>");
         details = details.concat("Email: " + this.getEmail() + "<br>");

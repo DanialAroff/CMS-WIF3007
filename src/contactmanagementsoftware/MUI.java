@@ -24,60 +24,64 @@ public class MUI extends javax.swing.JFrame {
     /**
      * Creates new form MUI
      */
-    private MUI mg;
-    private ArrayList<ArrayList<Acquaintances>> a;
+    private static MUI mg;
+    private ArrayList<ArrayList<Acquaintances>> acquaintanceCategories;
     private ArrayList<ArrayList<Acquaintances>> temp;
-    private int x;
+    private int acquaintanceCategory;
     private int num;
-    private boolean flag;
+    private boolean newContact;
     private boolean dflag;
     private String op;
     private String str;
+    private PersonalFriendsFactory personalFrFctry;
+    private ProfessionalFriendsFactory profFrFctry;
+    private CasualAcquaintanceFactory casualAcqFctry;
+    private RelativesFactory relativesFctry;
     
     public void setMg(MUI mg) {
         this.mg = mg;
     }
 
-    public void setA(ArrayList<ArrayList<Acquaintances>> a) {
-        this.a = a;
+    public void setAcquaintanceCategories(ArrayList<ArrayList<Acquaintances>> acquaintances) {
+        this.acquaintanceCategories = acquaintances;
     }
     
     public void setDescription(){
-        name.setText("");
-        mobile.setText("");
-        email.setText("");
+        nameTextField.setText("");
+        mobileNoTextField.setText("");
+        emailTextField.setText("");
         one.setText("");
         two.setText("");
         three.setText("");
         if(!dflag){
-            name.setEditable(true);
-            mobile.setEditable(true);
-            email.setEditable(true);
+            nameTextField.setEditable(true);
+            mobileNoTextField.setEditable(true);
+            emailTextField.setEditable(true);
             one.setEditable(true);
             two.setEditable(true);
             three.setEditable(true);
         }
-        if(flag)
+        if(newContact)
             op = "Add";
         else
             op = "Edit";
-        if(!flag){
-            jButton10.setText("Save");
-            Acquaintances e = a.get(x).get(num);            
-            name.setText(e.getName());
-            mobile.setText(e.getMobileNo());
-            email.setText(e.getEmail());
-            switch(x){
+        if(!newContact){
+            addButton2.setText("Save");
+            Acquaintances e = acquaintanceCategories.get(acquaintanceCategory).get(num);            
+            nameTextField.setText(e.getName());
+            mobileNoTextField.setText(e.getMobileNo());
+            emailTextField.setText(e.getEmail());
+            switch(acquaintanceCategory){
                 case 0:
                     PersonalFriends perF = (PersonalFriends)e;
                     one.setText(perF.getEvents());
-                    two.setText(perF.getAContext());
-                    three.setText(perF.getADate());
+                    two.setText(perF.getFirstAcqContext());
+                    three.setText(perF.getFirstAcqDate());
                     break;
                 case 1:
                     Relatives rel = (Relatives)e;
-                    one.setText(rel.getBDate());
-                    two.setText(rel.getLDate());
+                    one.setText(rel.getBirthDate());
+                    two.setText(rel.getLastMetDate());
                     break;
                 case 2:
                     ProfessionalFriends proF = (ProfessionalFriends)e;
@@ -95,11 +99,11 @@ public class MUI extends javax.swing.JFrame {
                     break;
             }
         }
-        jButton10.setVisible(true);
-        jButton11.setVisible(true);
-        if(flag)
-            jButton10.setText("Add");
-        switch(x){
+        addButton2.setVisible(true);
+        cancelButton.setVisible(true);
+        if(newContact)
+            addButton2.setText("Add");
+        switch(acquaintanceCategory){
             case 0:
                 two.setVisible(true);
                 three.setVisible(true);
@@ -107,7 +111,7 @@ public class MUI extends javax.swing.JFrame {
                 jLabel7.setText("Specific Events:");
                 jLabel8.setText("First Acquaintance Context:");
                 jLabel9.setVisible(true);
-                jLabel3.setVisible(true);
+                detailsLabel.setVisible(true);
                 jLabel8.setVisible(true);
                 jLabel7.setVisible(true);
                 jScrollPane5.setVisible(true);
@@ -153,24 +157,35 @@ public class MUI extends javax.swing.JFrame {
                 break;
         }
         if(dflag){
-            name.setEditable(false);
-            mobile.setEditable(false);
-            email.setEditable(false);
+            nameTextField.setEditable(false);
+            mobileNoTextField.setEditable(false);
+            emailTextField.setEditable(false);
             one.setEditable(false);
             two.setEditable(false);
             three.setEditable(false);
-            jButton10.setText("Back to main menu");
-            jButton11.setVisible(false);
+            addButton2.setText("Back to main menu");
+            cancelButton.setVisible(false);
             jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Display Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DialogInput", 1, 16)));
         }
     }
     
-    public MUI() {
+    private MUI() {
         initComponents();
         String[] columnNames = {"S.No", "Name", "Mobile"," Email"};
         DefaultTableModel model = new DefaultTableModel(null, columnNames);
         jXTable1.setModel(model);
+        personalFrFctry = new PersonalFriendsFactory();
+        profFrFctry = new ProfessionalFriendsFactory();
+        casualAcqFctry = new CasualAcquaintanceFactory();
+        relativesFctry = new RelativesFactory();
         setUpTableData();
+    }
+    
+    public static MUI getMUI() {
+        if (mg == null) {
+            mg = new MUI();
+        }
+        return mg;
     }
 
     public final void setUpTableData() {
@@ -178,7 +193,7 @@ public class MUI extends javax.swing.JFrame {
         tableModel.setRowCount(0);
         ArrayList<Acquaintances> list;
         try{        
-            list = a.get(jList1.getSelectedIndex());
+            list = acquaintanceCategories.get(categoryList.getSelectedIndex());
         }
         catch(Exception e){
             return;
@@ -204,56 +219,56 @@ public class MUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        menuPanel = new javax.swing.JPanel();
+        cmsLabel = new javax.swing.JLabel();
+        addButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        searchButton = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        categoryList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         jXTable1 = new org.jdesktop.swingx.JXTable();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        categoryLabel = new javax.swing.JLabel();
+        detailsLabel = new javax.swing.JLabel();
+        editButton = new javax.swing.JButton();
+        viewDetailButton = new javax.swing.JButton();
+        readFileButton = new javax.swing.JButton();
+        saveFileButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         details = new javax.swing.JTextPane();
-        jButton9 = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        mobileNoLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        name = new javax.swing.JTextField();
-        email = new javax.swing.JTextField();
+        nameTextField = new javax.swing.JTextField();
+        emailTextField = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         two = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         three = new javax.swing.JTextArea();
-        jButton10 = new javax.swing.JButton();
-        mobile = new javax.swing.JTextField();
+        addButton2 = new javax.swing.JButton();
+        mobileNoTextField = new javax.swing.JTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
         one = new javax.swing.JTextArea();
-        jButton11 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
 
-        jLabel2.setFont(new java.awt.Font("Ubuntu Medium", 0, 20)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("<html><u>Contact Management System</u></html>");
+        cmsLabel.setFont(new java.awt.Font("Ubuntu Medium", 0, 20)); // NOI18N
+        cmsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cmsLabel.setText("<html><u>Contact Management System</u></html>");
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addButtonActionPerformed(evt);
             }
         });
 
@@ -264,31 +279,31 @@ public class MUI extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Search");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        searchButton.setText("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                searchButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Exit");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                exitButtonActionPerformed(evt);
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        categoryList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Personal Friends", "Relatives", "Professional Friends", "Casual Acquaintances" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        categoryList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                categoryListValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(categoryList);
 
         jXTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -324,125 +339,125 @@ public class MUI extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jXTable1);
 
-        jLabel1.setFont(new java.awt.Font("Ubuntu Medium", 0, 17)); // NOI18N
-        jLabel1.setText("Select Category:");
+        categoryLabel.setFont(new java.awt.Font("Ubuntu Medium", 0, 17)); // NOI18N
+        categoryLabel.setText("Select Category:");
 
-        jLabel3.setFont(new java.awt.Font("Ubuntu Medium", 0, 17)); // NOI18N
-        jLabel3.setText("Details:");
+        detailsLabel.setFont(new java.awt.Font("Ubuntu Medium", 0, 17)); // NOI18N
+        detailsLabel.setText("Details:");
 
-        jButton5.setText("Edit");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                editButtonActionPerformed(evt);
             }
         });
 
-        jButton6.setText("View full detail");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        viewDetailButton.setText("View full detail");
+        viewDetailButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                viewDetailButtonActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Read from file");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        readFileButton.setText("Read from file");
+        readFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                readFileButtonActionPerformed(evt);
             }
         });
 
-        jButton8.setText("Save as file");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        saveFileButton.setText("Save as file");
+        saveFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                saveFileButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
+        menuPanel.setLayout(menuPanelLayout);
+        menuPanelLayout.setHorizontalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton6)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addComponent(viewDetailButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton7))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(readFileButton))
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton8)
+                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                                .addComponent(saveFileButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(27, 27, 27))
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                    .addComponent(cmsLabel)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addComponent(categoryLabel)
                         .addGap(59, 59, 59)
-                        .addComponent(jLabel3)
+                        .addComponent(detailsLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(menuPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {deleteButton, jButton1, jButton3, jButton4, jButton5, jButton6, jButton7, jButton8});
+        menuPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addButton, deleteButton, editButton, exitButton, readFileButton, saveFileButton, searchButton, viewDetailButton});
 
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        menuPanelLayout.setVerticalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(deleteButton)
-                        .addComponent(jButton1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton3)
-                        .addComponent(jButton5)))
+                        .addComponent(addButton))
+                    .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(searchButton)
+                        .addComponent(editButton)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton4)
-                        .addComponent(jButton8))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton6)
-                        .addComponent(jButton7)))
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(exitButton)
+                        .addComponent(saveFileButton))
+                    .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(viewDetailButton)
+                        .addComponent(readFileButton)))
                 .addGap(49, 49, 49)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3))
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(categoryLabel)
+                    .addComponent(detailsLabel))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel1, "card2");
+        getContentPane().add(menuPanel, "card2");
 
         details.setEditable(false);
         jScrollPane3.setViewportView(details);
 
-        jButton9.setText("Back to main menu");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        backButton.setText("Back to main menu");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                backButtonActionPerformed(evt);
             }
         });
 
@@ -456,7 +471,7 @@ public class MUI extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(194, 194, 194)
-                .addComponent(jButton9)
+                .addComponent(backButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -465,7 +480,7 @@ public class MUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton9)
+                .addComponent(backButton)
                 .addGap(21, 21, 21))
         );
 
@@ -473,11 +488,11 @@ public class MUI extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Add Casual Acquaintance Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DialogInput", 1, 16))); // NOI18N
 
-        jLabel4.setText("Name:");
+        nameLabel.setText("Name:");
 
-        jLabel5.setText("Mobile No:");
+        mobileNoLabel.setText("Mobile No:");
 
-        jLabel6.setText("Email:");
+        emailLabel.setText("Email:");
 
         jLabel7.setText("First meeting time & location:");
 
@@ -485,9 +500,9 @@ public class MUI extends javax.swing.JFrame {
 
         jLabel9.setText("Other useful information:");
 
-        name.addActionListener(new java.awt.event.ActionListener() {
+        nameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameActionPerformed(evt);
+                nameTextFieldActionPerformed(evt);
             }
         });
 
@@ -500,10 +515,10 @@ public class MUI extends javax.swing.JFrame {
         three.setRows(5);
         jScrollPane5.setViewportView(three);
 
-        jButton10.setText("Add");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        addButton2.setText("Add");
+        addButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                addButton2ActionPerformed(evt);
             }
         });
 
@@ -511,10 +526,10 @@ public class MUI extends javax.swing.JFrame {
         one.setRows(5);
         jScrollPane6.setViewportView(one);
 
-        jButton11.setText("Cancel");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -528,21 +543,21 @@ public class MUI extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jLabel8)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                    .addComponent(emailLabel)
+                    .addComponent(mobileNoLabel)
+                    .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mobile, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mobileNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                        .addComponent(addButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton11, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                         .addGap(132, 132, 132)))
                 .addContainerGap())
         );
@@ -551,16 +566,16 @@ public class MUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameLabel)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(mobile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mobileNoLabel)
+                    .addComponent(mobileNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(emailLabel)
+                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
@@ -578,8 +593,8 @@ public class MUI extends javax.swing.JFrame {
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton10)
-                    .addComponent(jButton11))
+                    .addComponent(addButton2)
+                    .addComponent(cancelButton))
                 .addGap(3, 3, 3))
         );
 
@@ -588,22 +603,22 @@ public class MUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int index = jList1.getSelectedIndex();
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        int index = categoryList.getSelectedIndex();
         if(index<0){
             JOptionPane.showMessageDialog(mg, "Select a category!");
             return;
         }
-        jPanel1.setVisible(false);
+        menuPanel.setVisible(false);
         jPanel3.setVisible(true);
-        x = index;
-        flag = true;
+        acquaintanceCategory = index;
+        newContact = true;
         dflag = false;
         setDescription();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int index = jList1.getSelectedIndex();
+        int index = categoryList.getSelectedIndex();
         if(index<0){
             JOptionPane.showMessageDialog(mg, "Select a category!");
             return;
@@ -619,13 +634,13 @@ public class MUI extends javax.swing.JFrame {
             "Confirm",
             JOptionPane.YES_NO_OPTION);
         if(n==0){
-            a.get(index).remove(tindex);
+            acquaintanceCategories.get(index).remove(tindex);
             JOptionPane.showMessageDialog(mg, "Successfully Deleted");
             mg.setUpTableData();
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         String s = (String)JOptionPane.showInputDialog(
             mg,
             "Enter name: ",
@@ -636,23 +651,23 @@ public class MUI extends javax.swing.JFrame {
             "");
         if(s==null)
             return;
-        jPanel1.setVisible(false);
+        menuPanel.setVisible(false);
         jPanel2.setVisible(true);
         str = s;
         details.setContentType( "text/html" );
         runn();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_searchButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         System.exit(0);        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_exitButtonActionPerformed
 
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+    private void categoryListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoryListValueChanged
         setUpTableData();
-    }//GEN-LAST:event_jList1ValueChanged
+    }//GEN-LAST:event_categoryListValueChanged
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        int index = jList1.getSelectedIndex();
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        int index = categoryList.getSelectedIndex();
         if(index<0){
             JOptionPane.showMessageDialog(mg, "Select a category!");
             return;
@@ -663,16 +678,16 @@ public class MUI extends javax.swing.JFrame {
             return;
         }
         num = tindex;
-        flag = false;
+        newContact = false;
         dflag = false;
-        x = index;
+        acquaintanceCategory = index;
         setDescription();
-        jPanel1.setVisible(false);
+        menuPanel.setVisible(false);
         jPanel3.setVisible(true);
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_editButtonActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        int index = jList1.getSelectedIndex();
+    private void viewDetailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDetailButtonActionPerformed
+        int index = categoryList.getSelectedIndex();
         if(index<0){
             JOptionPane.showMessageDialog(mg, "Select a category!");
             return;
@@ -683,41 +698,31 @@ public class MUI extends javax.swing.JFrame {
             return;
         }
         num = tindex;
-        flag = false;
-        x = index;
-        jPanel1.setVisible(false);
+        newContact = false;
+        acquaintanceCategory = index;
+        menuPanel.setVisible(false);
         jPanel3.setVisible(true);
         dflag = true;
         setDescription();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_viewDetailButtonActionPerformed
 
     public void runn(){
         String s = "<html> <b>Search results:</b><br>Found!<br><br>Acquaintance Details: <br>";
         int j = 0;
-        for (ArrayList<Acquaintances> acquaintanceCategory : a) {
-            for (int i = 0; i < acquaintanceCategory.size(); i++) {
-                if (acquaintanceCategory.get(i).getName().matches(str)) {
-                    j++;
-//                    if ()
-                    
-                    Acquaintances acq = acquaintanceCategory.get(i);
-                    s = s.concat(j + ". " + acq.details());
-                    s = s.concat("<br>");
-                }
-            }
+        for (ArrayList<Acquaintances> acquaintanceCategory : acquaintanceCategories) {
+//            for (int i = 0; i < acquaintanceCategory.size(); i++) {
+//                if (acquaintanceCategory.get(i).getName().matches(str)) {
+//                    j++;
+////                    if ()
+//                    
+//                    Acquaintances acq = acquaintanceCategory.get(i);
+//                    s = s.concat(j + ". <br>" + acq.getDetails());
+//                    s = s.concat("<br>");
+//                }
+//            }
+            s = s.concat(new Search().printContact(str, acquaintanceCategory));
             j = 0;
         }
-//        for(int i = 0; i < a.get(0).size(); i++){
-//            if(a.get(0).get(i).getName().matches(str)){
-//                j++;
-//                PersonalFriends perF = (PersonalFriends)a.get(0).get(i);
-//                if(j==1){
-//                    s = s.concat("<br>I. Personal Friends<br>");
-//                }
-//                s = s.concat(j + ". " + perF.details());
-//            }
-//        }
-//        j = 0;
         if(s.matches("<html> <b>Search results:</b><br>Found!<br><br>Acquaintance Details: <br>")){
             s  = "<html>No result found</html>";
         }
@@ -727,7 +732,7 @@ public class MUI extends javax.swing.JFrame {
         details.setText(s);
     }
     
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void readFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readFileButtonActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         int result = fileChooser.showOpenDialog(this);
@@ -750,18 +755,18 @@ public class MUI extends javax.swing.JFrame {
         try{
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < temp.get(i).size(); j++){
-                    a.get(i).add(temp.get(i).get(j));
+                    acquaintanceCategories.get(i).add(temp.get(i).get(j));
                 }
             }
         }
         catch(Exception e){
 
         }
-//        mg.setUpTableData();
-    }//GEN-LAST:event_jButton7ActionPerformed
+        mg.setUpTableData();
+    }//GEN-LAST:event_readFileButtonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        String s = (String)JOptionPane.showInputDialog(
+    private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileButtonActionPerformed
+        String fileNameInput = (String)JOptionPane.showInputDialog(
             mg,
             "Enter file name: (*.ser)",
             "Input",
@@ -769,40 +774,41 @@ public class MUI extends javax.swing.JFrame {
             null,
             null,
             "output.ser");
-        if(s==null)
-        return;
-        if(!s.endsWith(".ser")){
+        if(fileNameInput == null)
+            return;
+        if(!fileNameInput.endsWith(".ser")){
             JOptionPane.showMessageDialog(mg, "File name should end with .ser");
             return;
         }
         File[] fileList = (new File(".")).listFiles((File pathname) -> pathname.getName().endsWith(".ser"));
-        boolean flag = false;
+        boolean isFileExist = false;
         for(File f : fileList){
-            if(f.getName().matches(s)){
-                flag = true;
+            if(f.getName().matches(fileNameInput)){
+                isFileExist = true;
             }
         }
-        if(flag){
-            int q = JOptionPane.showConfirmDialog(mg, s + " already exists:\nAre you sure you want to overwrite?");
+        if(isFileExist){
+            int q = JOptionPane.showConfirmDialog(mg, fileNameInput + " already exists:\nAre you sure you want to overwrite?");
             if(q!=0)
             return;
         }
         try {
-            SerializationUtil.serialize(a, s);
+            SerializationUtil.serialize(acquaintanceCategories, fileNameInput);
         } catch (IOException e) {
+            e.printStackTrace();
             return;
         }
-        JOptionPane.showMessageDialog(mg, s + " saved successfully");
-    }//GEN-LAST:event_jButton8ActionPerformed
+        JOptionPane.showMessageDialog(mg, fileNameInput + " saved successfully");
+    }//GEN-LAST:event_saveFileButtonActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         jPanel2.setVisible(false);
-        jPanel1.setVisible(true);
-    }//GEN-LAST:event_jButton9ActionPerformed
+        menuPanel.setVisible(true);
+    }//GEN-LAST:event_backButtonActionPerformed
 
-    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
+    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_nameActionPerformed
+    }//GEN-LAST:event_nameTextFieldActionPerformed
 
         public boolean MobileNoChecker(String str){
         int x;
@@ -830,25 +836,25 @@ public class MUI extends javax.swing.JFrame {
             return true;
     }
         
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void addButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButton2ActionPerformed
         dflag = true;
-        String Name = name.getText();
-        if(Name.isEmpty()){
+        String name = nameTextField.getText();
+        if(!new NameChecker(name).checkValid()){
             JOptionPane.showMessageDialog(mg, "Enter a name");
             return;
         }
-        String Mobile = mobile.getText();
-        if(!new MobileNoChecker(Mobile).checkValid()){
+        String mobileNo = mobileNoTextField.getText();
+        if(!new MobileNoChecker(mobileNo).checkValid()){
             JOptionPane.showMessageDialog(mg, "Enter a valid mobile number (6-15 digits)");
             return;
         }
-        String Email = email.getText();
-        if(!Email.contains("@")){
+        String email = emailTextField.getText();
+        if(!new EmailChecker(email).checkValid()){
             JOptionPane.showMessageDialog(mg, "Enter a valid email");
             return;
         }
         String One,Two,Three;
-        switch(x){
+        switch(acquaintanceCategory){
             case 0: //perF
                 One = one.getText();
                 if(One.isEmpty() || One.length() > 300){
@@ -869,19 +875,19 @@ public class MUI extends javax.swing.JFrame {
                     return;
                 }
                 PersonalFriends perF;
-                if(flag)
-                    perF = new PersonalFriends();
+                if(newContact)
+                    perF = (PersonalFriends) personalFrFctry.getAcquaintance();
                 else
-                    perF = (PersonalFriends)a.get(x).get(num);
-                perF.setName(Name);
-                perF.setMobileNo(Mobile);
-                perF.setEmail(Email);
+                    perF = (PersonalFriends)acquaintanceCategories.get(acquaintanceCategory).get(num);
+                perF.setName(name);
+                perF.setMobileNo(mobileNo);
+                perF.setEmail(email);
                 perF.setEvents(One);
-                perF.setAContext(Two);
-                perF.setADate(Three);
-                if(flag)
-                    a.get(x).add(perF);
-                    //this.a.get(x).add(perF);
+                perF.setFirstAcqContext(Two);
+                perF.setFirstAcqDate(Three);
+                if(newContact)
+                    acquaintanceCategories.get(acquaintanceCategory).add(perF);
+                    //this.acquaintances.get(x).add(perF);
                 break;
             case 1: //rel
                 One = one.getText();
@@ -901,17 +907,17 @@ public class MUI extends javax.swing.JFrame {
                     return;
                 }
                 Relatives rel;
-                if(flag)
-                    rel = new Relatives();
+                if(newContact)
+                    rel = (Relatives) relativesFctry.getAcquaintance();
                 else
-                    rel = (Relatives)a.get(x).get(num);
-                rel.setName(Name);
-                rel.setMobileNo(Mobile);
-                rel.setEmail(Email);
-                rel.setBDate(One);
-                rel.setLDate(Two);
-                if(flag)
-                    a.get(x).add(rel);
+                    rel = (Relatives)acquaintanceCategories.get(acquaintanceCategory).get(num);
+                rel.setName(name);
+                rel.setMobileNo(mobileNo);
+                rel.setEmail(email);
+                rel.setBirthDate(One);
+                rel.setLastMetDate(Two);
+                if(newContact)
+                    acquaintanceCategories.get(acquaintanceCategory).add(rel);
                 break;
             case 2: //proF
                 One = one.getText();
@@ -920,16 +926,16 @@ public class MUI extends javax.swing.JFrame {
                     return;
                 }
                 ProfessionalFriends proF;
-                if(flag)
-                    proF = new ProfessionalFriends();
+                if(newContact)
+                    proF = (ProfessionalFriends) profFrFctry.getAcquaintance();
                 else
-                    proF = (ProfessionalFriends)a.get(x).get(num);
-                proF.setName(Name);
-                proF.setMobileNo(Mobile);
-                proF.setEmail(Email);
+                    proF = (ProfessionalFriends)acquaintanceCategories.get(acquaintanceCategory).get(num);
+                proF.setName(name);
+                proF.setMobileNo(mobileNo);
+                proF.setEmail(email);
                 proF.setCommonInterests(One);
-                if(flag)
-                    a.get(x).add(proF);
+                if(newContact)
+                    acquaintanceCategories.get(acquaintanceCategory).add(proF);
                 break;
                 case 3: //ca
                 One = one.getText();
@@ -948,31 +954,31 @@ public class MUI extends javax.swing.JFrame {
                     return;
                 }
                 CasualAcquaintances ca;
-                if(flag)
-                    ca = new CasualAcquaintances();
+                if(newContact)
+                    ca = (CasualAcquaintances) casualAcqFctry.getAcquaintance();
                 else
-                    ca = (CasualAcquaintances)a.get(x).get(num);
-                ca.setName(Name);
-                ca.setMobileNo(Mobile);
-                ca.setEmail(Email);
+                    ca = (CasualAcquaintances)acquaintanceCategories.get(acquaintanceCategory).get(num);
+                ca.setName(name);
+                ca.setMobileNo(mobileNo);
+                ca.setEmail(email);
                 ca.setWhenWhere(One);
                 ca.setCircumstances(Two);
                 ca.setOtherInfo(Three);
-                if(flag)
-                    a.get(x).add(ca);
+                if(newContact)
+                    acquaintanceCategories.get(acquaintanceCategory).add(ca);
                 break;
             default:
                 break;
         }
-        jPanel1.setVisible(true);
+        menuPanel.setVisible(true);
         jPanel3.setVisible(false);
         mg.setUpTableData();
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_addButton2ActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        jPanel1.setVisible(true);
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        menuPanel.setVisible(true);
         jPanel3.setVisible(false);
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1010,30 +1016,23 @@ public class MUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton addButton2;
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel categoryLabel;
+    private javax.swing.JList categoryList;
+    private javax.swing.JLabel cmsLabel;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextPane details;
-    private javax.swing.JTextField email;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel detailsLabel;
+    private javax.swing.JButton editButton;
+    private javax.swing.JLabel emailLabel;
+    private javax.swing.JTextField emailTextField;
+    private javax.swing.JButton exitButton;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1043,10 +1042,17 @@ public class MUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private org.jdesktop.swingx.JXTable jXTable1;
-    private javax.swing.JTextField mobile;
-    private javax.swing.JTextField name;
+    private javax.swing.JPanel menuPanel;
+    private javax.swing.JLabel mobileNoLabel;
+    private javax.swing.JTextField mobileNoTextField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameTextField;
     private javax.swing.JTextArea one;
+    private javax.swing.JButton readFileButton;
+    private javax.swing.JButton saveFileButton;
+    private javax.swing.JButton searchButton;
     private javax.swing.JTextArea three;
     private javax.swing.JTextArea two;
+    private javax.swing.JButton viewDetailButton;
     // End of variables declaration//GEN-END:variables
 }

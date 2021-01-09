@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Scanner;
 
 public class PersonalFriends extends Acquaintances implements Serializable{
-    private String AContext;
-    private String ADate;
+    private String firstAcqContext;
+    private String firstAcqDate;
     private String Events;
     private static Scanner reader = new Scanner(System.in);
     public static int numberPerF = 0;
@@ -14,26 +14,26 @@ public class PersonalFriends extends Acquaintances implements Serializable{
         numberPerF++;
     }
     
-    public String getAContext() {
-        return AContext;
+    public String getFirstAcqContext() {
+        return firstAcqContext;
     }
 
-    public void setAContext(String AContext) {
-        Scanner reader = new Scanner(System.in);
-        if(!AContext.isEmpty())
-            this.AContext = AContext;
+    public void setFirstAcqContext(String firstAcqContext) {
+        reader = new Scanner(System.in);
+        if(!firstAcqContext.isEmpty())
+            this.firstAcqContext = firstAcqContext;
         else{
             System.out.println("Enter at least one character");
-            setAContext(reader.nextLine());
+            setFirstAcqContext(reader.nextLine());
         }
     }
 
-    public String getADate() {
-        return ADate;
+    public String getFirstAcqDate() {
+        return firstAcqDate;
     }
 
-    public void setADate(String ADate) {
-        this.ADate = ADate;
+    public void setFirstAcqDate(String firstAcqDate) {
+        this.firstAcqDate = firstAcqDate;
     }
 
     public String getEvents() {
@@ -41,7 +41,7 @@ public class PersonalFriends extends Acquaintances implements Serializable{
     }
 
     public void setEvents(String Events) {
-        Scanner reader = new Scanner(System.in);
+        reader = new Scanner(System.in);
         if(!Events.isEmpty())
             this.Events = Events;
         else{
@@ -51,14 +51,15 @@ public class PersonalFriends extends Acquaintances implements Serializable{
     }
 
     @Override
-    public String details() {
+    public String getDetails() {
         String details = "";
+        details = details.concat("Category: Personal Friends" + "<br>");
         details = details.concat("Name: " + this.getName() + "<br>");
         details = details.concat("Mobile No: " + this.getMobileNo() + "<br>");
         details = details.concat("Email: " + this.getEmail() + "<br>");
         details = details.concat("Specific events: " + this.getEvents() + "<br>");
-        details = details.concat("First Acquaintance context: " + this.getAContext() + "<br>");
-        details = details.concat("First Acquaintance date: " + this.getADate() + "<br>");
+        details = details.concat("First Acquaintance context: " + this.getFirstAcqContext() + "<br>");
+        details = details.concat("First Acquaintance date: " + this.getFirstAcqDate() + "<br>");
         return details;
     }
 }
