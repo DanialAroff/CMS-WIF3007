@@ -696,10 +696,14 @@ public class MUI extends javax.swing.JFrame {
         int j = 0;
         for (ArrayList<Acquaintances> acquaintanceCategory : a) {
             for (int i = 0; i < acquaintanceCategory.size(); i++) {
-                j++;
-                Acquaintances acq = acquaintanceCategory.get(i);
-                s = s.concat(j + ". " + acq.details());
-                s = s.concat("<br>");
+                if (acquaintanceCategory.get(i).getName().matches(str)) {
+                    j++;
+//                    if ()
+                    
+                    Acquaintances acq = acquaintanceCategory.get(i);
+                    s = s.concat(j + ". " + acq.details());
+                    s = s.concat("<br>");
+                }
             }
             j = 0;
         }
